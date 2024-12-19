@@ -17,7 +17,6 @@ const corsOptions = {
   optionsSuccessStatus: 200, // Status for preflight responses
 };
 app.use(cors(corsOptions));
-
 app.use("/", homeRouter);
 
 const loadRoutes = async () => {
@@ -36,6 +35,7 @@ const loadRoutes = async () => {
       app.use(routePath, route.default || route);
     })
   );
+
 };
 
 loadRoutes().catch((error: Error) => {
@@ -44,6 +44,5 @@ loadRoutes().catch((error: Error) => {
 
 // Connect to the database
 connectToDatabase();
-
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8000;
-app.listen(PORT, () => `Server running on port ${PORT}`);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
