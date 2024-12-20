@@ -1,22 +1,17 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import { readdirSync } from "fs";
 import { connectToDatabase } from "./config/db";
 import path from "path";
 import dotenv from "dotenv";
 import homeRouter from "./home";
+import { corsOptions } from "./helpers";
 dotenv.config();
 
 const app: Application = express();
 
 app.use(express.static(path.join(__dirname, "src", "public")));
-app.use(express.json());
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Your frontend origin
-  credentials: true, // Allow credentials (cookies, etc.)
-  optionsSuccessStatus: 200, // Status for preflight responses
-};
+app.use(express.json())
 app.use(cors(corsOptions));
 app.use("/", homeRouter);
 

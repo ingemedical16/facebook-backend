@@ -1,9 +1,10 @@
 import { generateCode } from "./generateCode";
 import { autoGenerateUsername } from "./generateUserName";
-import { sendVerificationEmail, sendResetCode } from "./mailer";
+import { sendVerificationEmail, sendResetCodeEmail } from "./mailer";
 import { generateToken } from "./token";
 import { createErrorResponse, createSuccussResponse } from "./createResponse";
 import { uploadsFilesToCloud, searchImages } from "./uploadCloud";
+import corsOptions from './corsOptions';
 import {
   validateEmail,
   validateLength,
@@ -21,10 +22,11 @@ export {
   validateLength,
   validatePassword,
   validateUsername,
-  sendResetCode,
+  sendResetCodeEmail,
   validateBirthDate,
   createErrorResponse,
   createSuccussResponse,
   uploadsFilesToCloud,
   searchImages,
+  corsOptions
 };
