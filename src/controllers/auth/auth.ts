@@ -7,7 +7,7 @@ import {
   createSuccussResponse,
   generateCode,
   generateToken,
-  sendResetCode,
+  sendResetCodeEmail,
   sendVerificationEmail,
   validateBirthDate,
   validateEmail,
@@ -360,7 +360,7 @@ export const sendResetPasswordCode = async (
       user: user._id,
     });
     savedCode.save();
-    sendResetCode(user.email, user.first_name, code);
+    sendResetCodeEmail(user.email, user.first_name, code);
     return createSuccussResponse(
       res,
       200,
