@@ -121,7 +121,7 @@ export const register = async (
     const data = {
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         username: user.username,
         picture: user.picture,
         first_name: user.first_name,
@@ -258,7 +258,7 @@ export const login = async (
     const data = {
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         username: user.username,
         picture: user.picture,
         first_name: user.first_name,
