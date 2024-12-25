@@ -288,8 +288,8 @@ export const getProfile = async (
 
     const friendship: FriendshipStatus = {
       friends:
-        user.friends.includes(profile._id.toString()) &&
-        profile.friends.includes(user._id.toString()),
+        user.friends.includes(profile._id) &&
+        profile.friends.includes(user._id),
       following: user.following.includes(profile._id.toString()),
       requestSent: profile.requests.includes(user._id.toString()),
       requestReceived: user.requests.includes(profile._id.toString()),
@@ -304,11 +304,9 @@ export const getProfile = async (
       )
       .sort({ createdAt: -1 });
 
-    const userProfile = await User.findOne({ username })
-                                 .select("-password")
-                                 .populate("friends", "first_name last_name username picture");
+    await profile.populate("friends", "first_name last_name username picture");
     const data = {
-      ...userProfile?.toObject(),
+      ...profile?.toObject(),
       posts,
       friendship,
     };
@@ -444,7 +442,7 @@ export const addFriend = async (
     }
     if (
       receiver.requests.includes(sender._id.toString()) ||
-      receiver.friends.includes(sender._id.toString())
+      receiver.friends.includes(sender._id)
     ) {
       return createErrorResponse(
         res,
@@ -498,7 +496,7 @@ export const cancelRequest = async (
         "Friend request not found."
       );
     }
-    if (receiver.friends.includes(sender._id.toString())) {
+    if (receiver.friends.includes(sender._id)) {
       return createErrorResponse(
         res,
         400,
@@ -653,8 +651,8 @@ export const unfriend = async (
     }
 
     if (
-      !receiver.friends.includes(sender._id.toString()) ||
-      !sender.friends.includes(receiver._id.toString())
+      !receiver.friends.includes(sender._id) ||
+      !sender.friends.includes(receiver._id)
     ) {
       return createErrorResponse(
         res,
