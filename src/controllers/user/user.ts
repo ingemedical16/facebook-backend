@@ -304,10 +304,11 @@ export const getProfile = async (
       )
       .sort({ createdAt: -1 });
 
-    // Populate the friends field in the profile
-    await profile.populate("friends", "first_name last_name username picture");
+    const userProfile = await User.findOne({ username })
+                                 .select("-password")
+                                 .populate("friends", "first_name last_name username picture");
     const data = {
-      ...profile.toObject(),
+      ...userProfile?.toObject(),
       posts,
       friendship,
     };
