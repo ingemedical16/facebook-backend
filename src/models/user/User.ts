@@ -15,9 +15,9 @@ export interface IUser extends Document {
   birth_day: number;
   verified?: boolean;
   friends: mongoose.Types.ObjectId[];
-  following: string[];
-  followers: string[];
-  requests: string[];
+  following: mongoose.Types.ObjectId[];
+  followers: mongoose.Types.ObjectId[];
+  requests: mongoose.Types.ObjectId[];
   search: mongoose.Types.ObjectId[];
   details: {
     biography?: string;
@@ -108,18 +108,24 @@ const userSchema: Schema<IUser> = new Schema(
         ref: "User",
       },
     ],
-    following: {
-      type: [String],
-      default: [],
-    },
-    followers: {
-      type: [String],
-      default: [],
-    },
-    requests: {
-      type: [String],
-      default: [],
-    },
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    requests: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     search: [
       {
         type: Schema.Types.ObjectId,

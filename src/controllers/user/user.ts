@@ -290,9 +290,9 @@ export const getProfile = async (
       friends:
         user.friends.includes(profile._id) &&
         profile.friends.includes(user._id),
-      following: user.following.includes(profile._id.toString()),
-      requestSent: profile.requests.includes(user._id.toString()),
-      requestReceived: user.requests.includes(profile._id.toString()),
+      following: user.following.includes(profile._id),
+      requestSent: profile.requests.includes(user._id),
+      requestReceived: user.requests.includes(profile._id),
     };
 
     // Retrieve posts for the profile
@@ -441,7 +441,7 @@ export const addFriend = async (
       return createErrorResponse(res, 404, "USER_NOT_FOUND", "User not found.");
     }
     if (
-      receiver.requests.includes(sender._id.toString()) ||
+      receiver.requests.includes(sender._id) ||
       receiver.friends.includes(sender._id)
     ) {
       return createErrorResponse(
@@ -488,7 +488,7 @@ export const cancelRequest = async (
       return createErrorResponse(res, 404, "USER_NOT_FOUND", "User not found.");
     }
 
-    if (!receiver.requests.includes(sender._id.toString())) {
+    if (!receiver.requests.includes(sender._id)) {
       return createErrorResponse(
         res,
         400,
@@ -547,8 +547,8 @@ export const follow = async (
     }
 
     if (
-      receiver.followers.includes(sender._id.toString()) ||
-      sender.following.includes(receiver._id.toString())
+      receiver.followers.includes(sender._id) ||
+      sender.following.includes(receiver._id)
     ) {
       return createErrorResponse(
         res,
@@ -599,8 +599,8 @@ export const unfollow = async (
     }
 
     if (
-      !receiver.followers.includes(sender._id.toString()) ||
-      !sender.following.includes(receiver._id.toString())
+      !receiver.followers.includes(sender._id) ||
+      !sender.following.includes(receiver._id)
     ) {
       return createErrorResponse(
         res,
@@ -713,7 +713,7 @@ export const acceptRequest = async (
       return createErrorResponse(res, 404, "USER_NOT_FOUND", "User not found.");
     }
 
-    if (!receiver.requests.includes(sender._id.toString())) {
+    if (!receiver.requests.includes(sender._id)) {
       return createErrorResponse(
         res,
         400,
@@ -766,7 +766,7 @@ export const deleteRequest = async (
       return createErrorResponse(res, 404, "USER_NOT_FOUND", "User not found.");
     }
 
-    if (!receiver.requests.includes(sender._id.toString())) {
+    if (!receiver.requests.includes(sender._id)) {
       return createErrorResponse(
         res,
         400,
