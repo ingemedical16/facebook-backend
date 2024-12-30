@@ -22,8 +22,13 @@ export const searchUserByEmail = async (
       );
     }
     const data = {
+      _id: user._id,
+      username: user.username,
+      email:user.email,
       picture: user.picture,
       first_name: user.first_name,
+      last_name: user.last_name,
+
     };
 
     return createSuccussResponse(
