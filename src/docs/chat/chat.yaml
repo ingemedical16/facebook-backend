@@ -1,150 +1,192 @@
 openapi: 3.0.0
 info:
   title: Chat API
-  description: API for managing user-to-user and group chats, including sending messages and managing group members.
   version: 1.0.0
-servers:
-  - url: http://localhost:5000/api
+  description: API documentation for chat system.
 paths:
-  /chats/private:
+  /api/chat/private:
     post:
       summary: Create a private chat
-      description: Create a private chat between the authenticated user and another user.
+      operationId: createPrivateChat
       tags:
-        - Chats
+      - Chat
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                recipientId:
-                  type: string
-                  description: The ID of the recipient user.
-              required:
-                - recipientId
-              example:
-                recipientId: "64bfc1d4a7e2c3e5b1f2d7e9"
+              $ref: '#/components/schemas/CreatePrivateChatRequest'
       responses:
-        200:
-          description: Private chat already exists.
+        '200':
+          description: Private chat already exists
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        201:
-          description: Private chat created successfully.
+                $ref: '#/components/schemas/ChatResponse'
+        '201':
+          description: Private chat created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        400:
-          description: Recipient ID is required.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        404:
-          description: Recipient not found.
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Invalid request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        500:
-          description: Internal Server Error.
+        '500':
+          description: Server error.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /chats/{chatId}:
-    get:
-      summary: Get chat details
-      description: Retrieve the details of a specific chat, including members and messages.
-      tags:
-        - Chats
-      parameters:
-        - name: chatId
-          in: path
-          required: true
-          description: The ID of the chat.
-          schema:
-            type: string
-      responses:
-        200:
-          description: Chat details retrieved successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChatDetailsResponse'
-        404:
-          description: Chat not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        500:
-          description: Internal Server Error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /chats/{chatId}/messages:
+  /api/chat/{chatId}/message:
     post:
       summary: Send a message
-      description: Send a message to a chat.
+      operationId: sendMessage
       tags:
-        - Chats
+      - Chat
       parameters:
-        - name: chatId
-          in: path
-          required: true
-          description: The ID of the chat.
-          schema:
-            type: string
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                content:
-                  type: string
-                  description: The content of the message.
-              required:
-                - content
-              example:
-                content: "Hello, how are you?"
+              $ref: '#/components/schemas/SendMessageRequest'
       responses:
-        200:
-          description: Message sent successfully.
+        '200':
+          description: Message sent successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        400:
-          description: Message content is required.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        404:
-          description: Chat not found.
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: Chat not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        403:
-          description: User is not a member of this chat.
+        '500':
+          description: Server error.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        500:
-          description: Internal Server Error.
+
+  /api/chat/{chatId}/member:
+    post:
+      summary: Add a member to a chat
+      operationId: addMemberToChat
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMemberRequest'
+      responses:
+        '200':
+          description: Member added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '404':
+          description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Remove a member from a chat
+      operationId: removeMemberFromChat
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveMemberRequest'
+      responses:
+        '200':
+          description: Member removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '404':
+          description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/chat/{chatId}:
+    get:
+      summary: Fetch chat details
+      operationId: getChatDetails
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+
+      responses:
+        '200':
+          description: Chat details fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '404':
+          description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
           content:
             application/json:
               schema:
@@ -152,76 +194,153 @@ paths:
 
 components:
   schemas:
+    CreatePrivateChatRequest:
+      type: object
+      properties:
+        recipientId:
+          type: string
+          description: ID of the recipient
+      required:
+      - recipientId
+
+    SendMessageRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Content of the message
+      required:
+      - content
+
+    AddMemberRequest:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: ID of the member to add
+      required:
+      - memberId
+    RemoveMemberRequest:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: ID of the member to remove
+      required:
+      - memberId
+    MessageResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: MESSAGE_SENT
+        message:
+          type: string
+          example: Message sent successfully
+        data:
+          type: object
+          properties:
+            sender:
+              type: string
+              example: 648f72ehjfd29c9e2548d9kghs
+              description: ID of the sender
+            content:
+              type: string
+              example: Hello, how are you?
+              description: Content of the message
+            createdAt:
+              type: string
+              format: date-time
+              example: 2022-09-15T12:34:56Z
+              description: Date and time when the message was created
+
+    ChatResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: CHAT_CREATED
+        message:
+          type: string
+          example: Private chat created successfully.
+        data:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 648f72ec3e29c9e2548d9a3f
+              description: ID of the chat
+            type:
+              type: string
+              enum:
+              - private
+              - group
+              default: private
+              example: private
+              description: Type of the chat
+            name:
+              type: string
+              example: Smith
+              description: Name of the chat
+            owner:
+              type: string
+              example: 648f72ehjfd29c9e2548d9kghs
+              description: ID of the chat owner
+            members:
+              type: array
+              items:
+                type: string
+                description: ID of a member in the chat
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/Message'
+
     SuccessResponse:
       type: object
       properties:
         status:
           type: string
-          example: "success"
+          example: success
         code:
           type: string
-          example: "MESSAGE_SENT"
+          example: OPERATION_SUCCESS
         message:
           type: string
-          example: "Message sent successfully."
-        data:
-          type: object
-          nullable: true
+          example: Operation completed successfully.
 
     ErrorResponse:
       type: object
       properties:
         status:
           type: string
-          example: "error"
+          example: error
         code:
           type: string
-          example: "CHAT_NOT_FOUND"
+          example: INVALID_INPUT
         message:
           type: string
-          example: "The specified chat does not exist."
+          example: Invalid input data.
 
-    ChatDetailsResponse:
+    Message:
       type: object
       properties:
-        status:
+        sender:
           type: string
-          example: "success"
-        code:
+          example: 648f72ehjfd29c9e2548d9kghs
+          description: ID of the sender
+        content:
           type: string
-          example: "CHAT_DETAILS_RETRIEVED"
-        message:
+          example: Hello, how are you?
+          description: Content of the message
+        createdAt:
           type: string
-          example: "Chat details retrieved successfully."
-        data:
-          type: object
-          properties:
-            chatId:
-              type: string
-              example: "64bfc1d4a7e2c3e5b1f2d7e9"
-            members:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: "64bfc1d4a7e2c3e5b1f2d7e9"
-                  username:
-                    type: string
-                    example: "john_doe"
-            messages:
-              type: array
-              items:
-                type: object
-                properties:
-                  senderId:
-                    type: string
-                    example: "64bfc1d4a7e2c3e5b1f2d7e9"
-                  content:
-                    type: string
-                    example: "Hello!"
-                  timestamp:
-                    type: string
-                    format: date-time
-                    example: "2025-01-12T10:00:00.000Z"
+          format: date-time
+          example: 2022-09-15T12:34:56Z
+          description: Date and time when the message was created
