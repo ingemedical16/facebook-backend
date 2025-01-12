@@ -1,9 +1,192 @@
-/uploadFile:
-  post:
-    $ref: './uploadFile.yaml'
-/uploadFilesToCloud:
-  post:
-    $ref: './uploadFilesToCloud.yaml'
-/listImages:
-  post:
-    $ref: './listImages.yaml'
+openapi: 3.0.0
+info:
+  title: "File Upload API"
+  version: 1.0.0
+  description: "API documentation for uploading a single file."
+
+paths:
+  /api/uploads/uploadFile:
+    post:
+      summary: Upload a file to the server
+      description: Upload a single file to the server and save it in a specified directory.
+      tags:
+      - Uploads
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: File successfully uploaded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: FILE_UPLOADED
+                  message:
+                    type: string
+                    example: "File uploaded successfully."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
+
+  /api/uploads/uploadFilesToCloud:
+    post:
+      summary: Upload multiple files to the cloud
+      description: Upload multiple files to a specified cloud folder.
+      tags:
+      - Uploads
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                folder:
+                  type: string
+                  example: "user-images"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        200:
+          description: Files successfully uploaded to the cloud.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: FILE_UPLOADED_TO_CLOUD
+                  message:
+                    type: string
+                    example: "File uploaded to cloud successfully."
+                  data:
+                    type: object
+                    properties:
+                      files:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            fileUrl:
+                              type: string
+                              example: "https://cloud-storage.com/file1.jpg"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
+
+  /api/uploads/listImages:
+    post:
+      summary: Search for images in the cloud
+      description: Search for images stored in the cloud, with options for sorting and limiting the number of results.
+      tags:
+      - Uploads
+      parameters:
+      - in: query
+        name: path
+        required: true
+        schema:
+          type: string
+          example: "user-images"
+      - in: query
+        name: sort
+        required: false
+        schema:
+          type: string
+          enum: [ asc, desc ]
+          default: "asc"
+        description: Sort the results in ascending or descending order.
+      - in: query
+        name: max
+        required: false
+        schema:
+          type: integer
+          default: 10
+        description: Limit the number of results returned.
+      responses:
+        200:
+          description: Successfully searched for images.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: IMAGES_SEARCHED
+                  message:
+                    type: string
+                    example: "Images searched successfully."
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fileUrl:
+                          type: string
+                          example: "https://cloud-storage.com/image.jpg"
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
