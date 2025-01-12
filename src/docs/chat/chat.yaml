@@ -10,11 +10,32 @@ paths:
       operationId: createPrivateChat
       tags:
       - Chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrivateChatRequest'
       responses:
+        '200':
+          description: Private chat already existe successfully
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ChatResponse'
+        
         '201':
           description: Private chat created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
         '400':
           description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/chat/{chatId}/message:
     post:
@@ -29,11 +50,25 @@ paths:
         schema:
           type: string
         description: ID of the chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
       responses:
         '200':
           description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
         '404':
           description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/chat/{chatId}/member:
     post:
@@ -90,3 +125,124 @@ paths:
           description: Chat details fetched successfully
         '404':
           description: Chat not found
+
+components:
+  schemas:
+    CreatePrivateChatRequest:
+      type: object
+      properties:
+        recipientId:
+          type: string
+          description: ID of the recipient
+      required:
+      - recipientId
+    SendMessageRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Content of the message
+      required:
+      - content
+    MessageResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: MESSAGE_SENT
+        message: "Message sent successfully"
+        data:
+          type: object
+          $ref: '#/components/schemas/Message'
+    ChatResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: CHAT_CREATED
+        message:
+          type: string
+          example: Private chat created successfully.
+        data:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 648f72ec3e29c9e2548d9a3f
+              description: ID of the chat
+            type:
+              type: string
+              enum:
+                - private
+                - group
+              default: private
+              example: private
+              description: Type of the chat
+            name:
+              type: string
+              example: Smith
+              description: Name of the chat
+            owner:
+              type: string
+              example: 648f72ehjfd29c9e2548d9kghs
+              description: ID of the chat owner
+            members:
+              type: array
+              items:
+                type: string
+                example: 648f72ehjfd29c9e2548d9kghs
+                description: ID of a member in the chat
+            messages:
+              type: array
+              items:
+                 $ref: '#/components/schemas/Message'
+    type: object
+      properties:
+        _id:
+          type: string
+   SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: OPERATION_SUCCESS
+        message:
+          type: string
+          example: Operation completed successfully.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        code:
+          type: string
+          example: INVALID_INPUT
+        message:
+          type: string
+          example: Invalid input data.
+    Message:
+      type: object
+      properties:
+        sender:
+          type: string
+          example: 648f72ehjfd29c9e2548d9kghs
+          description: ID of the sender
+        content:
+          type: string
+          example: Hello, how are you?
+          description: Content of the message
+        createdAt:
+          type: string
+          format: date-time
+          example: 2022-09-15T12:34:56Z
+          description: Date and time when the message was created
