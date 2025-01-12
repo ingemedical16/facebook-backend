@@ -35,6 +35,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/chat/{chatId}/message:
     post:
@@ -68,6 +74,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/chat/{chatId}/member:
     post:
@@ -82,11 +94,31 @@ paths:
         schema:
           type: string
         description: ID of the chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMemberRequest'
       responses:
         '200':
           description: Member added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
         '404':
           description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     delete:
       summary: Remove a member from a chat
@@ -100,11 +132,31 @@ paths:
         schema:
           type: string
         description: ID of the chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveMemberRequest'
       responses:
         '200':
           description: Member removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
         '404':
           description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/chat/{chatId}:
     get:
@@ -119,6 +171,7 @@ paths:
         schema:
           type: string
         description: ID of the chat
+
       responses:
         '200':
           description: Chat details fetched successfully
@@ -128,6 +181,12 @@ paths:
                 $ref: '#/components/schemas/ChatResponse'
         '404':
           description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
           content:
             application/json:
               schema:
@@ -153,6 +212,22 @@ components:
       required:
       - content
 
+    AddMemberRequest:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: ID of the member to add
+      required:
+      - memberId
+    RemoveMemberRequest:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: ID of the member to remove
+      required:
+      - memberId
     MessageResponse:
       type: object
       properties:
