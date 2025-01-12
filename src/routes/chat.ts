@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { isAuthenticated } from "@/middlewares/authenticate";
-import * as chatController from "@/controllers/chat/Chat"
+import * as chatController from "@/controllers/chat/chat"
 const router: Router = express.Router();
 
 router.use(isAuthenticated);

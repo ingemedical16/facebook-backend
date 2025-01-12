@@ -1,18 +1,338 @@
-/register:
-  post:
-    $ref: './register.yaml'
-/verify-email:
-  post:
-    $ref: './verify-email.yaml'
-/login:
-  post:
-    $ref: './login.yaml'
-/sendResetPasswordCode:
-  post:
-    $ref: './send-reset-password-code.yaml'
-/validateResetCode:
-  post:
-    $ref: './validate-reset-code.yaml'
-/changePassword:
-  post:
-    $ref: './change-password.yaml'
+openapi: 3.0.0
+info:
+  title: User Authentication API
+  version: 1.0.0
+  description: API for user authentication, including registration functionality.
+paths:
+  /api/auth/register:
+    post:
+      summary: User registration
+      description: Registers a new user and sends a verification email.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Missing or invalid required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Email already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/login:
+    post:
+      summary: User login
+      description: Authenticates a user and generates an access token if the credentials are valid.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing or invalid required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid email or password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Email not verified.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/sendResetPasswordCode:
+    post:
+      summary: Send a reset code to the user
+      description: Sends a password reset code to the user's email if the email is valid and associated with an existing account.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the user requesting a password reset.
+                  example: user@example.com
+      responses:
+        '200':
+          description: Reset code sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Invalid email address.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found with this email address.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/validateResetCode:
+    post:
+      summary: Validate a reset code for password recovery
+      description: Validates reset codes for password recovery.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - code
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the user.
+                  example: user@example.com
+                code:
+                  type: string
+                  description: The reset code sent to the user's email.
+                  example: "123456"
+      responses:
+        '200':
+          description: Reset code validated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: Invalid reset code.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/changePassword:
+    post:
+      summary: Change a user's password
+      description: Changes a user's password.
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the user whose password needs to be changed.
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: The new password for the user.
+                  example: "newSecurePassword123"
+      responses:
+        '200':
+          description: Password changed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+          example: newuser@example.com
+        password:
+          type: string
+          format: password
+          description: The user's password.
+          example: "StrongPassword123!"
+        first_name:
+          type: string
+          description: The user's first name.
+          example: Jane
+        last_name:
+          type: string
+          description: The user's last name.
+          example: Smith
+        gender:
+          type: string
+          description: The user's gender.
+          enum:
+          - male
+          - female
+          - other
+          example: female
+        birth_year:
+          type: integer
+          description: The user's birth year (e.g., 1990).
+          minimum: 1900
+          maximum: 2025
+          example: 1990
+        birth_month:
+          type: integer
+          description: The user's birth month.
+          minimum: 1
+          maximum: 12
+          example: 6
+        birth_day:
+          type: integer
+          description: The user's birth day.
+          minimum: 1
+          maximum: 31
+          example: 15
+      required:
+      - email
+      - password
+      - first_name
+      - last_name
+      - gender
+      - birth_year
+      - birth_month
+      - birth_day
+    RegisterResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: REGISTRATION_SUCCESS
+        message:
+          type: string
+          example: Registration successful. Please check your email to verify your account.
+        data:
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 648f72ec3e29c9e2548d9a3f
+                first_name:
+                  type: string
+                  example: Jane
+                last_name:
+                  type: string
+                  example: Smith
+                verified:
+                  type: boolean
+                  example: false
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: string
+          example: OPERATION_SUCCESS
+        message:
+          type: string
+          example: Operation completed successfully.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        code:
+          type: string
+          example: INVALID_INPUT
+        message:
+          type: string
+          example: Invalid input data.

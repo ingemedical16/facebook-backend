@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: Chat API
+  version: 1.0.0
+  description: API documentation for chat system.
+paths:
+  /api/chat/private:
+    post:
+      summary: Create a private chat
+      operationId: createPrivateChat
+      tags:
+      - Chat
+      responses:
+        '201':
+          description: Private chat created successfully
+        '400':
+          description: Invalid request
+
+  /api/chat/{chatId}/message:
+    post:
+      summary: Send a message
+      operationId: sendMessage
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+      responses:
+        '200':
+          description: Message sent successfully
+        '404':
+          description: Chat not found
+
+  /api/chat/{chatId}/member:
+    post:
+      summary: Add a member to a chat
+      operationId: addMemberToChat
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+      responses:
+        '200':
+          description: Member added successfully
+        '404':
+          description: Chat not found
+
+    delete:
+      summary: Remove a member from a chat
+      operationId: removeMemberFromChat
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+      responses:
+        '200':
+          description: Member removed successfully
+        '404':
+          description: Chat not found
+
+  /api/chat/{chatId}:
+    get:
+      summary: Fetch chat details
+      operationId: getChatDetails
+      tags:
+      - Chat
+      parameters:
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the chat
+      responses:
+        '200':
+          description: Chat details fetched successfully
+        '404':
+          description: Chat not found

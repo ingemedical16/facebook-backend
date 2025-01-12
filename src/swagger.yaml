@@ -17,3 +17,5 @@ paths:
     $ref: './docs/reactions/reactions.yaml'
   /api/uploads:
     $ref: './docs/uploads/uploads.yaml'
+  /api/uploads:
+    $ref: './docs/chat/chat.yaml'
