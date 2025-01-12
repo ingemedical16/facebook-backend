@@ -4,14 +4,14 @@ info:
   description: API for managing user-to-user and group chats, including sending messages and managing group members.
   version: 1.0.0
 servers:
-- url: http://localhost:5000/api
+  - url: http://localhost:5000/api
 paths:
   /chats/private:
     post:
       summary: Create a private chat
       description: Create a private chat between the authenticated user and another user.
       tags:
-      - Chats
+        - Chats
       requestBody:
         required: true
         content:
@@ -23,7 +23,7 @@ paths:
                   type: string
                   description: The ID of the recipient user.
               required:
-              - recipientId
+                - recipientId
               example:
                 recipientId: "64bfc1d4a7e2c3e5b1f2d7e9"
       responses:
@@ -63,14 +63,14 @@ paths:
       summary: Get chat details
       description: Retrieve the details of a specific chat, including members and messages.
       tags:
-      - Chats
+        - Chats
       parameters:
-      - name: chatId
-        in: path
-        required: true
-        description: The ID of the chat.
-        schema:
-          type: string
+        - name: chatId
+          in: path
+          required: true
+          description: The ID of the chat.
+          schema:
+            type: string
       responses:
         200:
           description: Chat details retrieved successfully.
@@ -96,14 +96,14 @@ paths:
       summary: Send a message
       description: Send a message to a chat.
       tags:
-      - Chats
+        - Chats
       parameters:
-      - name: chatId
-        in: path
-        required: true
-        description: The ID of the chat.
-        schema:
-          type: string
+        - name: chatId
+          in: path
+          required: true
+          description: The ID of the chat.
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -115,7 +115,7 @@ paths:
                   type: string
                   description: The content of the message.
               required:
-              - content
+                - content
               example:
                 content: "Hello, how are you?"
       responses:
