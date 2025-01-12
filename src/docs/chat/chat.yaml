@@ -18,12 +18,11 @@ paths:
               $ref: '#/components/schemas/CreatePrivateChatRequest'
       responses:
         '200':
-          description: Private chat already existe successfully
+          description: Private chat already exists
           content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ChatResponse'
-        
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
         '201':
           description: Private chat created successfully
           content:
@@ -123,8 +122,16 @@ paths:
       responses:
         '200':
           description: Chat details fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
         '404':
           description: Chat not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -136,6 +143,7 @@ components:
           description: ID of the recipient
       required:
       - recipientId
+
     SendMessageRequest:
       type: object
       properties:
@@ -144,6 +152,7 @@ components:
           description: Content of the message
       required:
       - content
+
     MessageResponse:
       type: object
       properties:
@@ -153,10 +162,26 @@ components:
         code:
           type: string
           example: MESSAGE_SENT
-        message: "Message sent successfully"
+        message:
+          type: string
+          example: Message sent successfully
         data:
           type: object
-          $ref: '#/components/schemas/Message'
+          properties:
+            sender:
+              type: string
+              example: 648f72ehjfd29c9e2548d9kghs
+              description: ID of the sender
+            content:
+              type: string
+              example: Hello, how are you?
+              description: Content of the message
+            createdAt:
+              type: string
+              format: date-time
+              example: 2022-09-15T12:34:56Z
+              description: Date and time when the message was created
+
     ChatResponse:
       type: object
       properties:
@@ -179,8 +204,8 @@ components:
             type:
               type: string
               enum:
-                - private
-                - group
+              - private
+              - group
               default: private
               example: private
               description: Type of the chat
@@ -196,17 +221,13 @@ components:
               type: array
               items:
                 type: string
-                example: 648f72ehjfd29c9e2548d9kghs
                 description: ID of a member in the chat
             messages:
               type: array
               items:
-                 $ref: '#/components/schemas/Message'
-    type: object
-      properties:
-        _id:
-          type: string
-   SuccessResponse:
+                $ref: '#/components/schemas/Message'
+
+    SuccessResponse:
       type: object
       properties:
         status:
@@ -218,6 +239,7 @@ components:
         message:
           type: string
           example: Operation completed successfully.
+
     ErrorResponse:
       type: object
       properties:
@@ -230,6 +252,7 @@ components:
         message:
           type: string
           example: Invalid input data.
+
     Message:
       type: object
       properties:
