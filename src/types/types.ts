@@ -20,8 +20,14 @@ export interface RegisterRequestBody {
 export interface VerifyEmailRequestBody {
   token: string;
 }
-export interface RequestWithUserId extends Request {
-  user?: { id: string };
+export interface RequestWithUserId<
+  Params = any,
+  ResBody = any,
+  ReqBody = any,
+  ReqQuery = any,
+  Locals extends Record<string, any> = Record<string, any>
+> extends Request<Params, ResBody, ReqBody, ReqQuery, Locals> {
+  user?: { id: string }; // Add the custom `user` property
 }
 
 export type SearchApiResource = {
@@ -40,4 +46,11 @@ export type SearchApiResponse = {
   total_count: number;
   time: number;
 };
+
+export interface ResponseData<T = any> {
+  message: string;
+  code: string;
+  data?: T;
+  
+}
 
