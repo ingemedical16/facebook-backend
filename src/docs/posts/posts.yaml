@@ -1,15 +1,424 @@
-/createPost:
-  post:
-    $ref: './createPost.yaml'
-/getAllPosts:
-  get:
-    $ref: './getAllPosts.yaml'
-/comment:
-  put:
-    $ref: './comment.yaml'
-/savePost/{id}:
-  put:
-    $ref: './savePost.yaml'
-/deletePost/{id}:
-  delete:
-    $ref: './deletePost.yaml'
+swagger: '2.0'
+info:
+  title: "Create Post API"
+  version: 1.0.0
+  description: "API for creating a new post for an authenticated user."
+
+paths:
+  /api/posts/createPost:
+    post:
+      summary: Create a new post
+      description: Creates a new post for the authenticated user with the specified content.
+      tags:
+      - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: "This is a new post."
+                user:
+                  type: string
+                  example: "60d3b41abd4c3b4e8c1e10b3" # User ID of the post creator
+      responses:
+        200:
+          description: Post created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: POST_CREATED
+                  message:
+                    type: string
+                    example: "Post created successfully."
+                  data:
+                    type: object
+                    properties:
+                      post:
+                        type: object
+                        properties:
+                          content:
+                            type: string
+                            example: "This is a new post."
+                          user:
+                            type: string
+                            example: "60d3b41abd4c3b4e8c1e10b3"
+                          createdAt:
+                            type: string
+                            example: "2024-12-07T15:00:00.000Z"
+        400:
+          description: Missing required fields in the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: MISSING_REQUIRED_FIELDS
+                  message:
+                    type: string
+                    example: "Content or user is missing."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
+
+  /api/posts/getAllPosts:
+    get:
+      summary: Get all posts from followed users
+      description: Retrieves posts from users the authenticated user is following, including the user's own posts.
+      tags:
+      - Posts
+      responses:
+        200:
+          description: Successfully fetched all posts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: POSTS_FETCHED
+                  message:
+                    type: string
+                    example: "Posts fetched successfully."
+                  data:
+                    type: object
+                    properties:
+                      posts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                              example: "This is a new post."
+                            user:
+                              type: string
+                              example: "60d3b41abd4c3b4e8c1e10b3"
+                            createdAt:
+                              type: string
+                              example: "2024-12-07T15:00:00.000Z"
+        400:
+          description: User ID is missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_ID_MISSING
+                  message:
+                    type: string
+                    example: "User ID is missing in the request."
+        404:
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: "User not found."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
+
+  /api/posts/comment:
+    put:
+      summary: Add a comment to a post
+      description: Adds a comment to a specific post.
+      tags:
+      - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  example: "Great post!"
+                image:
+                  type: string
+                  example: "http://example.com/image.jpg"
+                postId:
+                  type: string
+                  example: "60d3b41abd4c3b4e8c1e10b4"
+      responses:
+        200:
+          description: Comment added successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: COMMENT_ADDED
+                  message:
+                    type: string
+                    example: "Comment added successfully."
+                  data:
+                    type: object
+                    properties:
+                      comments:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            comment:
+                              type: string
+                              example: "Great post!"
+                            image:
+                              type: string
+                              example: "http://example.com/image.jpg"
+                            commentBy:
+                              type: object
+                              properties:
+                                first_name:
+                                  type: string
+                                  example: "John"
+                                last_name:
+                                  type: string
+                                  example: "Doe"
+                                picture:
+                                  type: string
+                                  example: "http://example.com/john.jpg"
+                                username:
+                                  type: string
+                                  example: "john_doe"
+                            commentAt:
+                              type: string
+                              example: "2024-12-07T15:00:00.000Z"
+        400:
+          description: Comment or post ID is missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: COMMENT_OR_POST_ID_MISSING
+                  message:
+                    type: string
+                    example: "Comment or post ID is missing."
+        404:
+          description: Post not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: POST_NOT_FOUND
+                  message:
+                    type: string
+                    example: "Post not found."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
+
+  /api/posts/savePost/{id}:
+    put:
+      summary: Save or remove a post from saved posts
+      description: Allows the user to save a post or remove it from their saved posts list.
+      tags:
+      - Posts
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          example: "60d3b41abd4c3b4e8c1e10b5"
+      responses:
+        200:
+          description: Post saved or removed from saved list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: POST_SAVED
+                  message:
+                    type: string
+                    example: "Post saved successfully."
+        404:
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: "User not found."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
+  /api/posts/deletePost/{id}:
+    delete:
+      summary: Delete a post
+      description: Deletes a post identified by its unique ID.
+      tags:
+      - Posts
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          example: "60d3b41abd4c3b4e8c1e10b6"
+      responses:
+        200:
+          description: Post deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: POST_DELETED
+                  message:
+                    type: string
+                    example: "Post deleted successfully."
+        404:
+          description: Post not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: POST_NOT_FOUND
+                  message:
+                    type: string
+                    example: "Post not found."
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: "An unexpected error occurred. Please try again later."
