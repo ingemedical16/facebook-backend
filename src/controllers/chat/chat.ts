@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import { createErrorResponse, createSuccussResponse } from "@/helpers";
+import { createErrorResponse, createSuccussResponse, emitSocketEvent } from "@/helpers";
 import Chat from "@/models/chat/Chat";
 import User from "@/models/user/User";
 import { RequestWithUserId, ResponseData } from "@/types/types";
@@ -54,6 +54,15 @@ export const createPrivateChat = async (
       members: [senderId, recipientId],
       messages: [],
     });
+    if(req.io){
+      emitSocketEvent({
+      io: req.io, 
+      event: "chat_created", 
+      roomId:senderId!, 
+      data: chat
+    });
+    }
+    
 
     return createSuccussResponse(
       res,
@@ -111,7 +120,15 @@ export const sendMessage = async (
     const message = { sender: senderId, content, timestamp: new Date() };
     chat.messages.push(message);
     await chat.save();
-
+      if(req.io){
+        emitSocketEvent({
+        io: req.io, 
+        event: "message_sent", 
+        roomId: chatId, 
+        data: message
+      }
+    );
+  }
     return createSuccussResponse(
       res,
       200,
@@ -182,6 +199,14 @@ export const addMemberToChat = async (
     chat.members.push(member_id);
     chat.type = "group";
     await chat.save();
+    if(req.io){
+      emitSocketEvent({
+        io: req.io, 
+        event: "member_added", 
+        roomId: chatId, 
+        data: chat
+      });
+    };
 
     return createSuccussResponse(
       res,
@@ -240,6 +265,14 @@ export const removeMemberFromChat = async (
       (member) => member.toString() !== memberId
     );
     await chat.save();
+    if(req.io){
+      emitSocketEvent({
+        io: req.io, 
+        event: "member_removed", 
+        roomId: chatId, 
+        data: chat
+      });
+    };
 
     return createSuccussResponse(
       res,
