@@ -1,4 +1,5 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response  } from "express";
+import { Server as SocketIOServer } from "socket.io";
 import cors from "cors";
 import { readdirSync } from "fs";
 import { connectToDatabase } from "./config/db";
@@ -6,9 +7,27 @@ import path from "path";
 import dotenv from "dotenv";
 import homeRouter from "./home";
 import { corsOptions } from "./helpers";
+import socketMiddleware from "./middlewares/socketMiddleware";
 dotenv.config();
 
 const app: Application = express();
+// Initialize Socket.io server
+const http = require('http').createServer(app);
+const io = new SocketIOServer(http, {
+  cors: {
+    origin: corsOptions.origin as any, // Pass origin handler from corsOptions
+    methods: corsOptions.methods,
+    credentials: corsOptions.credentials,
+  },
+});
+
+
+
+// Middleware to attach socket to the request object
+app.use(socketMiddleware(io)); 
+
+
+
 
 app.use(express.static(path.join(__dirname, "src", "public")));
 app.use(express.json())
@@ -39,5 +58,18 @@ loadRoutes().catch((error: Error) => {
 
 // Connect to the database
 connectToDatabase();
+
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Listen for connections to the server
+http.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Socket.io event handlers
+io.on('connection', (socket: any) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+
+  
+});
