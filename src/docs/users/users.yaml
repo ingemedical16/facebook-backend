@@ -368,80 +368,88 @@ paths:
       responses:
         '200':
           description: User successfully removed from search history.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: SEARCH_USER_REMOVED
-              message:
-                type: string
-                example: User successfully removed from search history.
-              data:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  search:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        first_name:
-                          type: string
-                          example: John
-                        last_name:
-                          type: string
-                          example: Doe
-                        username:
-                          type: string
-                          example: johndoe123
-                        picture:
-                          type: string
-                          example: /path/to/profile/picture
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: SEARCH_USER_REMOVED
+                  message:
+                    type: string
+                    example: User successfully removed from search history.
+                  data:
+                    type: object
+                    properties:
+                      search:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            username:
+                              type: string
+                              example: johndoe123
+                            picture:
+                              type: string
+                              example: /path/to/profile/picture
         '400':
           description: Missing searchUserId in the request body.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SEARCH_USER_ID_REQUIRED
-              message:
-                type: string
-                example: Search user ID is required.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SEARCH_USER_ID_REQUIRED
+                  message:
+                    type: string
+                    example: Search user ID is required.
         '401':
           description: Unauthorized access.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: UNAUTHORIZED
-              message:
-                type: string
-                example: You are not authorized to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  message:
+                    type: string
+                    example: You are not authorized to perform this action.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/getProfile/{username}:
     get:
@@ -459,118 +467,124 @@ paths:
       responses:
         '200':
           description: User profile retrieved successfully.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: PROFILE_RETRIEVED
-              message:
-                type: string
-                example: Profile retrieved successfully.
-              data:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  _id:
+                  status:
                     type: string
-                    example: 605c72ef7c8e4f0f0f2a5b77
-                  first_name:
+                    example: success
+                  code:
                     type: string
-                    example: John
-                  last_name:
+                    example: PROFILE_RETRIEVED
+                  message:
                     type: string
-                    example: Doe
-                  username:
-                    type: string
-                    example: johndoe123
-                  picture:
-                    type: string
-                    example: /path/to/profile/picture
-                  posts:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        content:
-                          type: string
-                          example: This is a post.
-                        createdAt:
-                          type: string
-                          format: date-time
-                          example: 2024-12-07T12:34:56Z
-                        comments:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              comment:
-                                type: string
-                                example: Nice post!
-                              commentBy:
-                                type: object
-                                properties:
-                                  first_name:
-                                    type: string
-                                    example: Jane
-                                  last_name:
-                                    type: string
-                                    example: Smith
-                                  picture:
-                                    type: string
-                                    example: /path/to/commenter/picture
-                                  username:
-                                    type: string
-                                    example: janesmith
-                              commentAt:
-                                type: string
-                                format: date-time
-                                example: 2024-12-07T12:35:30Z
-                  friendship:
+                    example: Profile retrieved successfully.
+                  data:
                     type: object
                     properties:
-                      friends:
-                        type: boolean
-                        example: true
-                      following:
-                        type: boolean
-                        example: false
-                      requestSent:
-                        type: boolean
-                        example: true
-                      requestReceived:
-                        type: boolean
-                        example: false
+                      _id:
+                        type: string
+                        example: 605c72ef7c8e4f0f0f2a5b77
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      username:
+                        type: string
+                        example: johndoe123
+                      picture:
+                        type: string
+                        example: /path/to/profile/picture
+                      posts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                              example: This is a post.
+                            createdAt:
+                              type: string
+                              format: date-time
+                              example: 2024-12-07T12:34:56Z
+                            comments:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  comment:
+                                    type: string
+                                    example: Nice post!
+                                  commentBy:
+                                    type: object
+                                    properties:
+                                      first_name:
+                                        type: string
+                                        example: Jane
+                                      last_name:
+                                        type: string
+                                        example: Smith
+                                      picture:
+                                        type: string
+                                        example: /path/to/commenter/picture
+                                      username:
+                                        type: string
+                                        example: janesmith
+                                  commentAt:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-12-07T12:35:30Z
+                      friendship:
+                        type: object
+                        properties:
+                          friends:
+                            type: boolean
+                            example: true
+                          following:
+                            type: boolean
+                            example: false
+                          requestSent:
+                            type: boolean
+                            example: true
+                          requestReceived:
+                            type: boolean
+                            example: false
         '404':
           description: Profile not found or user not authenticated.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: PROFILE_NOT_FOUND
-              message:
-                type: string
-                example: Profile not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: PROFILE_NOT_FOUND
+                  message:
+                    type: string
+                    example: Profile not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/updateProfilePicture:
     put:
@@ -592,52 +606,58 @@ paths:
       responses:
         '200':
           description: Profile picture updated successfully.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: PROFILE_PICTURE_UPDATE
-              message:
-                type: string
-                example: Profile picture updated successfully.
-              data:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  picture:
+                  status:
                     type: string
-                    example: /path/to/new/profile/picture.jpg
+                    example: success
+                  code:
+                    type: string
+                    example: PROFILE_PICTURE_UPDATE
+                  message:
+                    type: string
+                    example: Profile picture updated successfully.
+                  data:
+                    type: object
+                    properties:
+                      picture:
+                        type: string
+                        example: /path/to/new/profile/picture.jpg
         '404':
           description: User not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/updateCover:
     put:
@@ -659,52 +679,58 @@ paths:
       responses:
         '200':
           description: Cover image updated successfully.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: COVER_UPDATE
-              message:
-                type: string
-                example: Cover updated successfully.
-              data:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  cover:
+                  status:
                     type: string
-                    example: /path/to/new/cover/image.jpg
+                    example: success
+                  code:
+                    type: string
+                    example: COVER_UPDATE
+                  message:
+                    type: string
+                    example: Cover updated successfully.
+                  data:
+                    type: object
+                    properties:
+                      cover:
+                        type: string
+                        example: /path/to/new/cover/image.jpg
         '404':
           description: User not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/updateDetails:
     put:
@@ -733,60 +759,66 @@ paths:
       responses:
         '200':
           description: User details updated successfully.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: DETAILS_UPDATE
-              message:
-                type: string
-                example: Details updated successfully.
-              data:
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  details:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: DETAILS_UPDATE
+                  message:
+                    type: string
+                    example: Details updated successfully.
+                  data:
                     type: object
-                    description: Updated user details.
-                    example:
-                      biography: "Software developer with a passion for coding."
-                      job: "Senior Developer"
-                      workPlace: "TechCorp"
-                      highSchool: "Springfield High"
-                      college: "Tech University"
-                      currentCity: "New York"
-                      homeTown: "Los Angeles"
+                    properties:
+                      details:
+                        type: object
+                        description: Updated user details.
+                        example:
+                          biography: "Software developer with a passion for coding."
+                          job: "Senior Developer"
+                          workPlace: "TechCorp"
+                          highSchool: "Springfield High"
+                          college: "Tech University"
+                          currentCity: "New York"
+                          homeTown: "Los Angeles"
         '404':
           description: User not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/addFriend/{id}:
     put:
@@ -804,60 +836,68 @@ paths:
       responses:
         '200':
           description: Friend request sent successfully.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: FRIEND_REQUEST_SUCCESS
-              message:
-                type: string
-                example: Friend request sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: FRIEND_REQUEST_SUCCESS
+                  message:
+                    type: string
+                    example: Friend request sent successfully.
         '400':
           description: Invalid action or friend request already sent.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: INVALID_ACTION
-              message:
-                type: string
-                example: You can't send a friend request to yourself.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: INVALID_ACTION
+                  message:
+                    type: string
+                    example: You can't send a friend request to yourself.
         '404':
           description: User not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/acceptRequest/{id}:
     put:
@@ -954,60 +994,68 @@ paths:
       responses:
         '200':
           description: Friend request canceled successfully.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: FRIEND_REQUEST_CANCELED
-              message:
-                type: string
-                example: Friend request canceled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: FRIEND_REQUEST_CANCELED
+                  message:
+                    type: string
+                    example: Friend request canceled successfully.
         '400':
           description: Invalid action, friend request not found, or already friends.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: INVALID_ACTION
-              message:
-                type: string
-                example: You can't send a friend request to yourself.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: INVALID_ACTION
+                  message:
+                    type: string
+                    example: You can't send a friend request to yourself.
         '404':
           description: User not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/follow/{id}:
     put:
@@ -1025,60 +1073,68 @@ paths:
       responses:
         '200':
           description: Successfully followed the user.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: FOLLOW_SUCCESS
-              message:
-                type: string
-                example: You successfully followed the user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: FOLLOW_SUCCESS
+                  message:
+                    type: string
+                    example: You successfully followed the user.
         '400':
           description: Invalid action, already following, or trying to follow yourself.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: INVALID_ACTION
-              message:
-                type: string
-                example: You can't follow yourself.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: INVALID_ACTION
+                  message:
+                    type: string
+                    example: You can't follow yourself.
         '404':
           description: User not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/unfollow/{id}:
     put:
