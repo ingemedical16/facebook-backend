@@ -1,51 +1,347 @@
-/search-user:
-  post:
-    $ref: './search-user.yaml'
-/search/{searchTerm}:
-  post:
-    $ref: './search.yaml'
-/addToSearchHistory:
-  put:
-    $ref: './addToSearchHistory.yaml'
-/getSearchHistory:
-  get:
-    $ref: './getSearchHistory.yaml'
-/removeFromSearchHistory:
-  put:
-    $ref: './removeFromSearchHistory.yaml'
-/getProfile/{username}:
-  get:
-    $ref: './getProfile.yaml'
-/updateProfilePicture:
-  put:
-    $ref: './updateProfilePicture.yaml'
-/updateCover:
-  put:
-   $ref: './updateCover.yaml'
-/updateDetails:
-  put:
-    $ref: './updateDetails.yaml'
-/addFriend/{id}:
-  put:
-   $ref: './addFriend.yaml'
-/acceptRequest/{id}:
-  put:
-    $ref: './acceptRequest.yaml'
-/cancelRequest/{id}:
-  put:
-    $ref: './cancelRequest.yaml'
-/follow/{id}:
-  put:
-    $ref: './follow.yaml'
-/unfollow/:id:
-  put:
-   $ref: './unfollow-route.yaml'
-/unfriend/{id}:
-  put:
-    $ref: './unfriend-route.yaml'
-/deleteRequest/{id}:
-  put:
-    $ref: './deleteRequest-route.yaml'
-/getFriendsPageInfos:
-  get:
-    $ref: './getFriendsPageInfos-route.yaml'
+openapi: 3.0.0
+info:
+  title: User Management API
+  version: 1.0.0
+  description: API documentation for managing users, profiles, and relationships.
+paths:
+  /api/users/search-user:
+    post:
+      summary: Search user by email
+      description: Search for a user by their email address.
+      tags:
+      - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email address of the user.
+                  example: johndoe@example.com
+              required:
+              - email
+      responses:
+        '200':
+          description: User found successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: USER_FOUND
+                  message:
+                    type: string
+                    example: User found successfully.
+                  data:
+                    type: object
+                    properties:
+                      picture:
+                        type: string
+                        example: /profile/picture/url
+                      first_name:
+                        type: string
+                        example: John
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
+
+  /api/users/search/{searchTerm}:
+    post:
+      summary: Search for users
+      description: Perform a search query on user profiles using a case-insensitive match.
+      tags:
+      - Users
+      parameters:
+      - name: searchTerm
+        in: path
+        required: true
+        description: The term to search for in user profiles.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Search completed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: SEARCH_RESULTS
+                  message:
+                    type: string
+                    example: Search completed successfully.
+                  data:
+                    type: object
+                    properties:
+                      searchResult:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            username:
+                              type: string
+                              example: johndoe
+                            picture:
+                              type: string
+                              example: https://example.com/johndoe.jpg
+        '400':
+          description: Search term is required.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SEARCH_TERM_REQUIRED
+                  message:
+                    type: string
+                    example: Search term is required.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
+
+  /api/users/addToSearchHistory:
+    put:
+      summary: Add a user to the search history
+      description: Add a user to the authenticated user's search history.
+      tags:
+      - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                searchUser:
+                  type: string
+                  description: The ObjectId of the user to add to the search history.
+                  example: 60b8d095d4e7c4f94588f7d1
+              required:
+              - searchUser
+      responses:
+        '200':
+          description: Search history updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: SEARCH_HISTORY_UPDATED
+                  message:
+                    type: string
+                    example: Search history updated successfully.
+                  data:
+                    type: object
+                    properties:
+                      search:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            username:
+                              type: string
+                              example: johndoe123
+                            picture:
+                              type: string
+                              example: /path/to/profile/picture
+        '400':
+          description: Missing search user or invalid search user ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SEARCH_USER_REQUIRED
+                  message:
+                    type: string
+                    example: Search user is required.
+        '401':
+          description: Unauthorized access.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  message:
+                    type: string
+                    example: You are not authorized to perform this action.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
+
+  /api/users/getSearchHistory:
+    get:
+      summary: Retrieve the search history of the authenticated user
+      description: Retrieve the search history of the authenticated user.
+      tags:
+      - Users
+      responses:
+        '200':
+          description: Search history retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: SEARCH_HISTORY_RETRIEVED
+                  message:
+                    type: string
+                    example: Search history retrieved successfully.
+                  data:
+                    type: object
+                    properties:
+                      search:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            username:
+                              type: string
+                              example: johndoe123
+                            picture:
+                              type: string
+                              example: /path/to/profile/picture
+        '401':
+          description: Unauthorized access.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+                  message:
+                    type: string
+                    example: You are not authorized to perform this action.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.

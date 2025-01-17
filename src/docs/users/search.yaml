@@ -1,36 +1,27 @@
 swagger: '2.0'
 info:
-  title: User Authentication API
+  title: User Search  API
   version: 1.0.0
-  description: API documentation for handling user authentication tasks such as changing passwords.
+  description: API documentation for searching users 
 paths:
-  /api/auth/change-password:
-    post:
-      summary: Change user password
-      description: Endpoint to allow users to change their current password to a new one.
+  /api/users//search/{searchTerm}:
+   post:
+      summary: Search for users
+      description: Perform a search query on various fields of user profiles using a case-insensitive match.
       tags:
-        - Authentication
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                currentPassword:
-                  type: string
-                  example: oldpassword123
-                  description: The current password of the user.
-                newPassword:
-                  type: string
-                  example: newpassword456
-                  description: The new password the user wants to set.
-              required:
-                - currentPassword
-                - newPassword
+        - Users
+      parameters:
+        - name: searchTerm
+          in: path
+          required: true
+          description: The term to search across user profiles.
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
       responses:
-        '200':
-          description: Password changed successfully.
+        200:
+          description: Search completed successfully.
           content:
             application/json:
               schema:
@@ -38,15 +29,35 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: success
+                    example: "success"
                   code:
                     type: string
-                    example: PASSWORD_CHANGED
+                    example: "SEARCH_RESULTS"
                   message:
                     type: string
-                    example: Password changed successfully.
-        '400':
-          description: Bad request, likely due to invalid input or missing required fields.
+                    example: "Search completed successfully."
+                  data:
+                    type: object
+                    properties:
+                      searchResult:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: "John"
+                            last_name:
+                              type: string
+                              example: "Doe"
+                            username:
+                              type: string
+                              example: "johndoe"
+                            picture:
+                              type: string
+                              example: "https://example.com/john.jpg"
+        400:
+          description: Search term is required.
           content:
             application/json:
               schema:
@@ -54,15 +65,15 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: error
+                    example: "error"
                   code:
                     type: string
-                    example: BAD_REQUEST
+                    example: "SEARCH_TERM_REQUIRED"
                   message:
                     type: string
-                    example: Invalid input. Please check your request.
-        '401':
-          description: Unauthorized, current password is incorrect or user is not authenticated.
+                    example: "Search term is required."
+        500:
+          description: Internal Server Error.
           content:
             application/json:
               schema:
@@ -70,26 +81,16 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: error
+                    example: "error"
                   code:
                     type: string
-                    example: UNAUTHORIZED
+                    example: "SERVER_ERROR"
                   message:
                     type: string
-                    example: Current password is incorrect or you are not authorized to perform this action.
-        '500':
-          description: Internal server error.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  code:
-                    type: string
-                    example: SERVER_ERROR
-                  message:
-                    type: string
-                    example: An unexpected error occurred. Please try again later.
+                    example: "An unexpected error occurred. Please try again later."
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
