@@ -4,7 +4,8 @@ import { sendVerificationEmail, sendResetCodeEmail } from "./mailer";
 import { generateToken } from "./token";
 import { createErrorResponse, createSuccussResponse } from "./createResponse";
 import { uploadsFilesToCloud, searchImages } from "./uploadCloud";
-import corsOptions from './corsOptions';
+import corsOptions from "./corsOptions";
+import { emitSocketEvent } from "./emitSocketEvent";
 import {
   validateEmail,
   validateLength,
@@ -28,5 +29,6 @@ export {
   createSuccussResponse,
   uploadsFilesToCloud,
   searchImages,
-  corsOptions
+  corsOptions,
+  emitSocketEvent,
 };
