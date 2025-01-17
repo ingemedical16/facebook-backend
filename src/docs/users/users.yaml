@@ -9,7 +9,7 @@ paths:
       summary: Search user by email
       description: Search for a user by their email address.
       tags:
-        - Users
+      - Users
       requestBody:
         required: true
         content:
@@ -22,7 +22,7 @@ paths:
                   description: The email address of the user.
                   example: johndoe@example.com
               required:
-                - email
+              - email
       responses:
         '200':
           description: User found successfully.
@@ -87,14 +87,14 @@ paths:
       summary: Search for users
       description: Perform a search query on user profiles using a case-insensitive match.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: searchTerm
-          in: path
-          required: true
-          description: The term to search for in user profiles.
-          schema:
-            type: string
+      - name: searchTerm
+        in: path
+        required: true
+        description: The term to search for in user profiles.
+        schema:
+          type: string
       responses:
         '200':
           description: Search completed successfully.
@@ -170,7 +170,7 @@ paths:
       summary: Add a user to the search history
       description: Add a user to the authenticated user's search history.
       tags:
-        - Users
+      - Users
       requestBody:
         required: true
         content:
@@ -183,7 +183,7 @@ paths:
                   description: The ObjectId of the user to add to the search history.
                   example: 60b8d095d4e7c4f94588f7d1
               required:
-                - searchUser
+              - searchUser
       responses:
         '200':
           description: Search history updated successfully.
@@ -275,7 +275,7 @@ paths:
       summary: Retrieve the search history of the authenticated user
       description: Retrieve the search history of the authenticated user.
       tags:
-        - Users
+      - Users
       responses:
         '200':
           description: Search history retrieved successfully.
@@ -448,14 +448,14 @@ paths:
       summary: Get a user profile by username
       description: Retrieve a user's profile, including their posts and friendship status with the authenticated user.
       tags:
-        - Users
+      - Users
       parameters:
-        - in: path
-          name: username
-          required: true
-          description: The username of the user whose profile is to be retrieved.
-          type: string
-          example: johndoe123
+      - in: path
+        name: username
+        required: true
+        description: The username of the user whose profile is to be retrieved.
+        type: string
+        example: johndoe123
       responses:
         '200':
           description: User profile retrieved successfully.
@@ -577,18 +577,18 @@ paths:
       summary: Update profile picture
       description: Update the authenticated user's profile picture.
       tags:
-        - Users
+      - Users
       parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              url:
-                type: string
-                description: URL of the new profile picture.
-                example: /path/to/new/profile/picture.jpg
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            url:
+              type: string
+              description: URL of the new profile picture.
+              example: /path/to/new/profile/picture.jpg
       responses:
         '200':
           description: Profile picture updated successfully.
@@ -644,18 +644,18 @@ paths:
       summary: Update cover image
       description: Update the authenticated user's cover image.
       tags:
-        - Users
+      - Users
       parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              url:
-                type: string
-                description: URL of the new cover image.
-                example: /path/to/new/cover/image.jpg
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            url:
+              type: string
+              description: URL of the new cover image.
+              example: /path/to/new/cover/image.jpg
       responses:
         '200':
           description: Cover image updated successfully.
@@ -711,25 +711,25 @@ paths:
       summary: Update user details
       description: Update the details of the authenticated user (e.g., biography, job, etc.).
       tags:
-        - Users
+      - Users
       parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              infos:
-                type: object
-                description: New details to update (e.g., biography, job, etc.).
-                example:
-                  biography: "Software developer with a passion for coding."
-                  job: "Senior Developer"
-                  workPlace: "TechCorp"
-                  highSchool: "Springfield High"
-                  college: "Tech University"
-                  currentCity: "New York"
-                  homeTown: "Los Angeles"
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            infos:
+              type: object
+              description: New details to update (e.g., biography, job, etc.).
+              example:
+                biography: "Software developer with a passion for coding."
+                job: "Senior Developer"
+                workPlace: "TechCorp"
+                highSchool: "Springfield High"
+                college: "Tech University"
+                currentCity: "New York"
+                homeTown: "Los Angeles"
       responses:
         '200':
           description: User details updated successfully.
@@ -793,14 +793,14 @@ paths:
       summary: Send a friend request
       description: Allows the authenticated user to send a friend request to another user by their user ID.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user to send the friend request to.
-          type: string
-          example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user to send the friend request to.
+        type: string
+        example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Friend request sent successfully.
@@ -864,85 +864,93 @@ paths:
       summary: Accept a friend request
       description: Allows the authenticated user to accept a friend request from another user.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user who sent the friend request.
-          type: string
-          example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user who sent the friend request.
+        type: string
+        example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Successfully accepted the friend request.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              code:
-                type: string
-                example: FRIEND_REQUEST_ACCEPTED
-              message:
-                type: string
-                example: Friend request successfully accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: string
+                    example: FRIEND_REQUEST_ACCEPTED
+                  message:
+                    type: string
+                    example: Friend request successfully accepted.
         '400':
           description: Invalid action, friend request not found, or trying to accept a request from yourself.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: INVALID_ACTION
-              message:
-                type: string
-                example: You can't accept a request from yourself.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: INVALID_ACTION
+                  message:
+                    type: string
+                    example: You can't accept a request from yourself.
         '404':
           description: User not found or friend request not found.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: USER_NOT_FOUND
-              message:
-                type: string
-                example: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    example: User not found.
         '500':
           description: Internal server error.
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: error
-              code:
-                type: string
-                example: SERVER_ERROR
-              message:
-                type: string
-                example: An unexpected error occurred. Please try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
   /api/users/cancelRequest/{id}:
     put:
       summary: Cancel a sent friend request
       description: Allows the authenticated user to cancel a friend request they previously sent to another user.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user to cancel the friend request for.
-          type: string
-          example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user to cancel the friend request for.
+        type: string
+        example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Friend request canceled successfully.
@@ -1006,14 +1014,14 @@ paths:
       summary: Follow a user
       description: Allows the authenticated user to follow another user.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user to follow.
-          type: string
-          example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user to follow.
+        type: string
+        example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Successfully followed the user.
@@ -1077,15 +1085,15 @@ paths:
       summary: Unfollow a user
       description: Allows the authenticated user to unfollow another user.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user to unfollow.
-          schema:
-            type: string
-            example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user to unfollow.
+        schema:
+          type: string
+          example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Successfully unfollowed the user.
@@ -1157,15 +1165,15 @@ paths:
       summary: Unfriend a user
       description: Allows the authenticated user to unfriend another user.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user to unfriend.
-          schema:
-            type: string
-            example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user to unfriend.
+        schema:
+          type: string
+          example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Successfully unfriended the user.
@@ -1237,15 +1245,15 @@ paths:
       summary: Delete a friend request
       description: Allows the authenticated user to delete a pending friend request sent to another user.
       tags:
-        - Users
+      - Users
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the user whose friend request will be deleted.
-          schema:
-            type: string
-            example: 60d0fe4f5311236168a109d8
+      - name: id
+        in: path
+        required: true
+        description: The ID of the user whose friend request will be deleted.
+        schema:
+          type: string
+          example: 60d0fe4f5311236168a109d8
       responses:
         '200':
           description: Successfully deleted the friend request.
@@ -1317,7 +1325,7 @@ paths:
       summary: Get friends page information
       description: Retrieves the list of friends, friend requests, and sent friend requests for the authenticated user.
       tags:
-        - Users
+      - Users
       responses:
         '200':
           description: Successfully retrieved the friends page information.
@@ -1430,12 +1438,12 @@ paths:
                   status:
                     type: string
                     example: error
-                    code:
+                  code:
                     type: string
                     example: SERVER_ERROR
-                    message:
-                      type: string
-                      example: An unexpected error occurred. Please try again later.
+                  message:
+                    type: string
+                    example: An unexpected error occurred. Please try again later.
 
 components:
   securitySchemes:
