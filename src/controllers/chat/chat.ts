@@ -199,6 +199,7 @@ export const addMemberToChat = async (
     chat.members.push(member_id);
     chat.type = "group";
     await chat.save();
+    
     if(req.io){
       emitSocketEvent({
         io: req.io, 
@@ -265,6 +266,8 @@ export const removeMemberFromChat = async (
       (member) => member.toString() !== memberId
     );
     await chat.save();
+   // Populate the members with specific fields
+    await chat.populate("members", "first_name last_name picture username email");
     if(req.io){
       emitSocketEvent({
         io: req.io, 
@@ -293,7 +296,7 @@ export const getChatDetails = async (req: Request, res: Response) => {
   try {
     const { chatId } = req.params;
 
-    const chat = await Chat.findById(chatId).populate("members", "name email");
+    const chat = await Chat.findById(chatId).populate("members", "first_name last_name picture username email");
     if (!chat) {
       return createErrorResponse(
         res,
