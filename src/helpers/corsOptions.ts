@@ -1,13 +1,11 @@
 import { CorsOptions } from "cors";
-import dotenv from "dotenv";
-dotenv.config();
+
 
 const corsOptions: CorsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     const allowedOrigins = (process.env.FRONTEND_URLS || "http://localhost:3000")
       .split(",")
       .map((url) => url.trim());
-console.log('allowed origins: ', process.env.FRONTEND_URLS);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true); // Allow request
     } else {
