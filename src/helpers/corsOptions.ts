@@ -1,4 +1,6 @@
 import { CorsOptions } from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const corsOptions: CorsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
