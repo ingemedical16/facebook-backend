@@ -7,7 +7,7 @@ const corsOptions: CorsOptions = {
     const allowedOrigins = (process.env.FRONTEND_URLS || "http://localhost:3000")
       .split(",")
       .map((url) => url.trim());
-console.log('allowed origins: ', allowedOrigins);
+console.log('allowed origins: ', process.env.FRONTEND_URLS);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true); // Allow request
     } else {
