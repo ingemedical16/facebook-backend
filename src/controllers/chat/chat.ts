@@ -39,6 +39,8 @@ export const createPrivateChat = async (
     });
 
     if (chat) {
+      // Populate the members with specific fields
+    await chat.populate("members", "first_name last_name picture username email");
       return createSuccussResponse(
         res,
         200,
@@ -54,6 +56,8 @@ export const createPrivateChat = async (
       members: [senderId, recipientId],
       messages: [],
     });
+    // Populate the members with specific fields
+    await chat.populate("members", "first_name last_name picture username email");
     if(req.io){
       emitSocketEvent({
       io: req.io, 
