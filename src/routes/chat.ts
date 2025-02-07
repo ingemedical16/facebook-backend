@@ -15,7 +15,7 @@ router.post("/:chatId/message", chatController.sendMessage);
 router.post("/:chatId/member", chatController.addMemberToChat);
 
 // Remove a member from chat
-router.delete("/:chatId/member", chatController.removeMemberFromChat);
+router.put("/:chatId/member", chatController.removeMemberFromChat);
 
 // Get chat details
 router.get("/:chatId", chatController.getChatDetails);
