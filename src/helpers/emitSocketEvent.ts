@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import { userSockets } from "@/index";
 
 interface EmitSocketEventOptions {
   io: Server;
@@ -25,9 +26,13 @@ export const emitSocketEvent = ({
   roomId,
   data,
 }: EmitSocketEventOptions) => {
-  if (roomId) {
+  console.log(
+    `Emitting event: ${event}, Room: ${roomId || "N/A"}, Data:`,
+    data
+  );
+  if (userSockets.get(roomId as string)) {
     // Emit to a specific room
-    io.to(roomId).emit(event, data);
+    io.to(userSockets.get(roomId as string) as string).emit(event, data);
   } else if (socket) {
     // Emit to a specific socket
     socket.emit(event, data);

@@ -69,10 +69,11 @@ export const createPrivateChat = async (
       "first_name last_name picture username email"
     );
     if (req.io) {
+      
       emitSocketEvent({
         io: req.io,
         event: "chat_created",
-        roomId: senderId!,
+        roomId: recipient._id.toString(),
         data: chat,
       });
     }

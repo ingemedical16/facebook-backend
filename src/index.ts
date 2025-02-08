@@ -9,7 +9,7 @@ import homeRouter from "./home";
 import { corsOptions } from "./helpers";
 import socketMiddleware from "./middlewares/socketMiddleware";
 dotenv.config();
-
+export const userSockets = new Map<string, string>(); // Maps userId -> socketId
 const app: Application = express();
 // Initialize Socket.io server
 const http = require('http').createServer(app);
@@ -64,12 +64,23 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8000;
 http.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // Socket.io event handlers
-io.on('connection', (socket: any) => {
-  console.log('A user connected:', socket.id);
+io.on("connection", (socket) => {
+  console.log("✅ A user connected:", socket.id);
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
+  // Listen for a custom "register" event to map userId -> socketId
+  socket.on("register", (userId) => {
+    userSockets.set(userId, socket.id);
+    console.log(`✅ User ${userId} registered with socket ${socket.id}`);
   });
 
-  
+  // Remove user from map when they disconnect
+  socket.on("disconnect", () => {
+    console.log(`❌ User disconnected: ${socket.id}`);
+    for (const [userId, socketId] of userSockets.entries()) {
+      if (socketId === socket.id) {
+        userSockets.delete(userId);
+        break;
+      }
+    }
+  });
 });
