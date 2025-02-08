@@ -149,7 +149,7 @@ export const sendMessage = async (
       io: req.io,
       event: "message_sent",
       roomId: chatId,
-      data: message,
+      data: chat,
     });
 
     return createSuccussResponse(
