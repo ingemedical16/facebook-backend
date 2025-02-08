@@ -13,6 +13,7 @@ declare global {
 // Middleware to attach Socket.io to the request object
 const socketMiddleware = (io: SocketIOServer) => {
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log("Socket Middleware Running:", !!io);
     req.io = io; // Attach the Socket.io instance to the request object
     next();
   };

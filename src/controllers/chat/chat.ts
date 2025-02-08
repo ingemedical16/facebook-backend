@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import { createErrorResponse, createSuccussResponse, emitSocketEvent } from "@/helpers";
+import {
+  createErrorResponse,
+  createSuccussResponse,
+  emitSocketEvent,
+} from "@/helpers";
 import Chat from "@/models/chat/Chat";
 import User from "@/models/user/User";
 import { RequestWithUserId, ResponseData } from "@/types/types";
@@ -40,7 +44,10 @@ export const createPrivateChat = async (
 
     if (chat) {
       // Populate the members with specific fields
-    await chat.populate("members", "first_name last_name picture username email");
+      await chat.populate(
+        "members",
+        "first_name last_name picture username email"
+      );
       return createSuccussResponse(
         res,
         200,
@@ -57,16 +64,18 @@ export const createPrivateChat = async (
       messages: [],
     });
     // Populate the members with specific fields
-    await chat.populate("members", "first_name last_name picture username email");
-    if(req.io){
+    await chat.populate(
+      "members",
+      "first_name last_name picture username email"
+    );
+    if (req.io) {
       emitSocketEvent({
-      io: req.io, 
-      event: "chat_created", 
-      roomId:senderId!, 
-      data: chat
-    });
+        io: req.io,
+        event: "chat_created",
+        roomId: senderId!,
+        data: chat,
+      });
     }
-    
 
     return createSuccussResponse(
       res,
@@ -120,19 +129,28 @@ export const sendMessage = async (
         "You are not a member of this chat."
       );
     }
+    console.log("Testing req.io:", !!req.io); // Check if req.io exists
+
+    if (!req.io) {
+      return createErrorResponse(
+        res,
+        500,
+        "SOCKET_IO_ERROR",
+        "Socket.io instance missing"
+      );
+    }
 
     const message = { sender: senderId, content, timestamp: new Date() };
     chat.messages.push(message);
     await chat.save();
-      if(req.io){
-        emitSocketEvent({
-        io: req.io, 
-        event: "message_sent", 
-        roomId: chatId, 
-        data: message
-      }
-    );
-  }
+
+    emitSocketEvent({
+      io: req.io,
+      event: "message_sent",
+      roomId: chatId,
+      data: message,
+    });
+
     return createSuccussResponse(
       res,
       200,
@@ -203,15 +221,15 @@ export const addMemberToChat = async (
     chat.members.push(member_id);
     chat.type = "group";
     await chat.save();
-    
-    if(req.io){
+
+    if (req.io) {
       emitSocketEvent({
-        io: req.io, 
-        event: "member_added", 
-        roomId: chatId, 
-        data: chat
+        io: req.io,
+        event: "member_added",
+        roomId: chatId,
+        data: chat,
       });
-    };
+    }
 
     return createSuccussResponse(
       res,
@@ -270,16 +288,19 @@ export const removeMemberFromChat = async (
       (member) => member.toString() !== memberId
     );
     await chat.save();
-   // Populate the members with specific fields
-    await chat.populate("members", "first_name last_name picture username email");
-    if(req.io){
+    // Populate the members with specific fields
+    await chat.populate(
+      "members",
+      "first_name last_name picture username email"
+    );
+    if (req.io) {
       emitSocketEvent({
-        io: req.io, 
-        event: "member_removed", 
-        roomId: chatId, 
-        data: chat
+        io: req.io,
+        event: "member_removed",
+        roomId: chatId,
+        data: chat,
       });
-    };
+    }
 
     return createSuccussResponse(
       res,
@@ -300,7 +321,10 @@ export const getChatDetails = async (req: Request, res: Response) => {
   try {
     const { chatId } = req.params;
 
-    const chat = await Chat.findById(chatId).populate("members", "first_name last_name picture username email");
+    const chat = await Chat.findById(chatId).populate(
+      "members",
+      "first_name last_name picture username email"
+    );
     if (!chat) {
       return createErrorResponse(
         res,
